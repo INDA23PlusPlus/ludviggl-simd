@@ -17,7 +17,9 @@
 #define VIEW        3.0f
 #define BOUND       20.0f
 
-void no_simd_mandelbrot(unsigned char *img)
+#define IMG_SIZE (IMG_WIDTH * IMG_HEIGHT)
+
+void mandelbrot_no_simd(unsigned char *img)
 {
     for (size_t y = 0; y < IMG_HEIGHT; y++)
     {
@@ -47,7 +49,7 @@ void no_simd_mandelbrot(unsigned char *img)
     }
 }
 
-void simd_mandelbrot(unsigned char *img)
+void mandelbrot_simd(unsigned char *img)
 {
     for (size_t y = 0; y < IMG_HEIGHT; y++)
     {
@@ -101,6 +103,7 @@ void simd_mandelbrot(unsigned char *img)
                 zy = _mm_add_ps(_mm_mul_ps(_mm_set_ps1(2.0f), _mm_mul_ps(tmp, zy)), cy);
             }
 
+            /* I can't use _mm_cvtepi32_epi8 :(  */
             img[x + 0 + (IMG_WIDTH * y)] = ((int*)&acc)[3];
             img[x + 1 + (IMG_WIDTH * y)] = ((int*)&acc)[2];
             img[x + 2 + (IMG_WIDTH * y)] = ((int*)&acc)[1];
@@ -109,36 +112,34 @@ void simd_mandelbrot(unsigned char *img)
     }
 }
 
-struct mandelbrot {
-    unsigned char *img_no_simd;
-    unsigned char *img_simd;
-};
-
-UBENCH_F_SETUP(mandelbrot)
+UBENCH_EX(mandelbrot, no_simd)
 {
-    ubench_fixture->img_no_simd = malloc(IMG_WIDTH * IMG_HEIGHT);
-    ubench_fixture->img_simd = malloc(IMG_WIDTH * IMG_HEIGHT);
+    void *img = malloc(IMG_SIZE);
+    assert(img);
 
-    assert(ubench_fixture->img_no_simd);
-    assert(ubench_fixture->img_simd);
+    UBENCH_DO_BENCHMARK() {
+            mandelbrot_no_simd(img);
+    }
+
+    int write = stbi_write_png("no_simd.png", IMG_WIDTH, IMG_HEIGHT, 1, img, 0);
+    assert(write);
+
+    free(img);
 }
 
-UBENCH_F_TEARDOWN(mandelbrot)
+UBENCH_EX(mandelbrot, simd)
 {
-    stbi_write_png("no_simd.png", IMG_WIDTH, IMG_HEIGHT, 1, ubench_fixture->img_no_simd, 0);
-    stbi_write_png("simd.png", IMG_WIDTH, IMG_HEIGHT, 1, ubench_fixture->img_simd, 0);
-    free(ubench_fixture->img_no_simd);
-    free(ubench_fixture->img_simd);
-}
+    void *img = malloc(IMG_SIZE);
+    assert(img);
 
-UBENCH_F(mandelbrot, no_simd)
-{
-    no_simd_mandelbrot(ubench_fixture->img_no_simd);
-}
+    UBENCH_DO_BENCHMARK() {
+            mandelbrot_simd(img);
+    }
 
-UBENCH_F(mandelbrot, simd)
-{
-    simd_mandelbrot(ubench_fixture->img_simd);
+    int write = stbi_write_png("simd.png", IMG_WIDTH, IMG_HEIGHT, 1, img, 0);
+    assert(write);
+
+    free(img);
 }
 
 UBENCH_MAIN();
