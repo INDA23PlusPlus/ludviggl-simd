@@ -11,7 +11,7 @@ CFLAGS=-Wall -Wextra -O9 -lm -mavx
 build: main.c
 	$(CC) $(CFLAGS) $(SRC) -o $(EXE)
 
-benchmark:
+benchmark: main.c
 	$(CC) $(CFLAGS) -DBENCHMARK $(SRC) -o benchmark
 
 
