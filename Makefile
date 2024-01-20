@@ -13,7 +13,7 @@ build: main.c
 
 benchmark: main.c
 	$(CC) $(CFLAGS) -DBENCHMARK $(SRC) -o benchmark
-
+	./benchmark
 
 run: build
 	./$(EXE)
