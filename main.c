@@ -111,6 +111,8 @@ void mandelbrot_simd(unsigned char *img)
     }
 }
 
+#ifdef BENCHMARK
+
 UBENCH_EX(mandelbrot, no_simd)
 {
     void *img = malloc(IMG_SIZE);
@@ -142,3 +144,24 @@ UBENCH_EX(mandelbrot, simd)
 }
 
 UBENCH_MAIN();
+
+#else
+
+int main()
+{
+    void *img = malloc(IMG_SIZE);
+    assert(img);
+
+    printf("creating mandelbrot image...");
+    mandelbrot_simd(img);
+
+    printf(" done!\nsaving...");
+    int write = stbi_write_png("simd.png", IMG_WIDTH, IMG_HEIGHT, 1, img, 0);
+    assert(write);
+
+    printf(" done!\n");
+
+    free(img);
+}
+
+#endif
