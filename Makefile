@@ -2,11 +2,12 @@
 SRC=main.c
 EXE=mandelbrot
 CC=gcc
-CFLAGS=-Wall -Wextra -O9 -lm -mavx
+CFLAGS=-Wall -Wextra -O1 -lm -march=native
 
 .PHONY:
 	clean
 	run
+	benchmark
 
 build: main.c
 	$(CC) $(CFLAGS) $(SRC) -o $(EXE)
