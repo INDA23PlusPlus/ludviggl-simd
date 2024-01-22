@@ -20,4 +20,4 @@ run: build
 	./$(EXE)
 
 clean:
-	rm -f *.o $(EXE) *.png
+	rm -f *.o $(EXE) benchmark *.png
