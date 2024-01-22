@@ -4,7 +4,7 @@
 - `make benchmark`: Run benchmarks to compare to version without SIMD.
 ## Results:
 ```
-mandelbrot.no_simd (mean 197.662ms, confidence interval +- 0.048377%)
-mandelbrot.simd (mean 53.057ms, confidence interval +- 0.180017%)
+mandelbrot.no_simd (mean 9.671s, confidence interval +- 0.061074%)
+mandelbrot.simd (mean 1.633s, confidence interval +- 0.133225%)
 ```
 ![Example](mandelbrot.png)
