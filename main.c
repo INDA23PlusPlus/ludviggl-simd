@@ -57,7 +57,7 @@ void mandelbrot_simd(unsigned char *img)
 
             /* Calculate pixels corresponding complex values */
             __m256 cx = _mm256_set1_ps((float)x);
-            cx = _mm256_add_ps(cx, _mm256_set_ps(0.0f, 1.0f, 2.0f, 3.0f, 4.0f, 5.0f, 6.0f, 7.0f));
+            cx = _mm256_add_ps(cx, _mm256_set_ps(7.0f, 6.0f, 5.0f, 4.0f, 3.0f, 2.0f, 1.0f, 0.0f));
             cx = _mm256_div_ps(cx, _mm256_set1_ps((float)IMG_WIDTH));
             cx = _mm256_sub_ps(cx, _mm256_set1_ps(.5f));
             cx = _mm256_mul_ps(cx, _mm256_set1_ps(VIEW));
@@ -102,14 +102,10 @@ void mandelbrot_simd(unsigned char *img)
                 zy = _mm256_add_ps(_mm256_mul_ps(_mm256_set1_ps(2.0f), _mm256_mul_ps(tmp, zy)), cy);
             }
 
-            img[x + 0 + (IMG_WIDTH * y)] = ((int*)&acc)[7];
-            img[x + 1 + (IMG_WIDTH * y)] = ((int*)&acc)[6];
-            img[x + 2 + (IMG_WIDTH * y)] = ((int*)&acc)[5];
-            img[x + 3 + (IMG_WIDTH * y)] = ((int*)&acc)[4];
-            img[x + 4 + (IMG_WIDTH * y)] = ((int*)&acc)[3];
-            img[x + 5 + (IMG_WIDTH * y)] = ((int*)&acc)[2];
-            img[x + 6 + (IMG_WIDTH * y)] = ((int*)&acc)[1];
-            img[x + 7 + (IMG_WIDTH * y)] = ((int*)&acc)[0];
+            for (size_t i = 0; i < 8; i++)
+            {
+                img[x + i + (IMG_WIDTH * y)] = ((int*)&acc)[i];
+            }
         }
     }
 }
