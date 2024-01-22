@@ -7,4 +7,5 @@
 mandelbrot.no_simd (mean 9.671s, confidence interval +- 0.061074%)
 mandelbrot.simd (mean 1.633s, confidence interval +- 0.133225%)
 ```
-![Example](mandelbrot.png)
+![Example 1](images/mandelbrot.png)
+![Example 2](images/mandelbrot1.png)
